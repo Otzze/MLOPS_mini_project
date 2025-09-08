@@ -39,7 +39,7 @@ jobs:
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
-          key: ${{ secrets.SERVER_SSH_KEY }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           source: "regression.joblib"
           target: "/home/ubuntu/qp"
 
@@ -48,7 +48,7 @@ jobs:
         with:
           host: 74.234.179.93
           username: ubuntu
-          key: ${{ secrets.SERVER_SSH_KEY }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/house-cost-regression:latest
             docker stop house-cost-regression || true
