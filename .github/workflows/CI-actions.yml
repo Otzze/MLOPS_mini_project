@@ -27,3 +27,32 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/house-cost-regression:latest
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload model to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ubuntu
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "regression.joblib"
+          target: "/home/ubuntu/qp"
+
+      - name: Pull Docker image on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: 74.234.179.93
+          username: ubuntu
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/house-cost-regression:latest
+            docker stop house-cost-regression || true
+            docker rm house-cost-regression || true
+            docker run -d --name house-cost-regression -p 8000:6666 \
+              -v /home/ubuntu/qp:/app \
+              ${{ secrets.DOCKERHUB_USERNAME }}/house-cost-regression:latest
