@@ -4,16 +4,6 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
 @app.get("/predict")
 def predict_get():
     return {"y_pred": 2}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
