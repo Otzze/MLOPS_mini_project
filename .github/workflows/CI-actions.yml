@@ -53,6 +53,6 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/house-cost-regression:latest
             docker stop house-cost-regression || true
             docker rm house-cost-regression || true
-            docker run -d --name house-cost-regression -p 8000:6666 \
+            docker run -d --name house-cost-regression -p 6666:8000 \
               -v /home/ubuntu/qp:/app \
               ${{ secrets.DOCKERHUB_USERNAME }}/house-cost-regression:latest
